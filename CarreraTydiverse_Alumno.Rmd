@@ -313,23 +313,27 @@ top_unique_sorted <- cran %>%
 25. Completa lo que se indica  usando `pipes`. Selecciona las columnas `ip_id, country, package, size` de `cran` y muestra el resultado por pantalla usando `print`. No es necesario almacenar.
 
 ```{r}
-
-
+cran %>%
+  select(ip_id, country, package, size) %>%
+  print()
 
 ```
 
 26. Añade una columna llamada `size_mb` que contenga el tamaño de cada descarga en megabytes.
 
 ```{r}
-
-
+cran %>%
+  mutate(size_mb = size / 2^20) %>%
+  print()
 
 ```
 
 27. Selecciona aquellas descargas cuyo tamaño es menor o igual que 0.5 Mbytes
 ```{r}
-
-
+cran %>%
+  mutate(size_mb = size / 2^20) %>%
+  filter(size_mb <= 0.5) %>%
+  print()
 
 ```
 28. Repite el apartado anterior ordenando los resultados, en orden descendente según el tamaño en Megabytes y muéstralo por pantalla.
