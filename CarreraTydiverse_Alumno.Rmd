@@ -349,9 +349,19 @@ cran %>%
 `cran%>%...+geom_point()`
 
 ```{r}
+library(dplyr)
+library(ggplot2)
 
-
-
+cran %>%
+  group_by(country) %>%
+  summarise(total_size = sum(size, na.rm = TRUE)) %>%
+  mutate(percentage = total_size / sum(total_size)) %>%
+  filter(percentage > 0.9) %>%
+  arrange(desc(total_size)) %>%
+  ggplot(aes(x = reorder(country, total_size), y = total_size)) +
+  geom_col() +
+  labs(x = "Country Code", y = "Traffic (Total Size of Downloads)") +
+  theme_minimal()
 
 ```
 **EXTRA** Tal como se indica en el ejercicio, el significado de los códigos usados para la codificación de los paise se pueden obtener de https://dev.maxmind.com/geoip/geoip2/geolite2/. Descarga el fichero **GeoLite2 Country** en formato CSV. Este fichero contiene información en varios idiomas. Usa `GeoLite2-Country-Locations-es.csv` que tiene la información en español. Deseamos poder determinar las descargas por continentes por lo que necesitamos añadir esta información a los datos de las descargas almacenados en `cran`. Procede de la siguiente forma:
@@ -364,18 +374,6 @@ cran %>%
  + Representa un diagrama de barras con el flujo de datos, por continente, ordenados de mayor a menor. Expresa el flujo de datos en Terabytes (1Tb=2^40bytes)
  
 ```{r}
-
-
-
-
-
-
-
-
-
-
-
-
 
 ```
 
@@ -393,15 +391,28 @@ Carga el fichero de datos `datostidyr.Rdata` que contiene varios conjuntos de da
 La columna `grade` es la calificación y las dos siguientes el número de estudiantes hombre y mujer que han recibido dicha calificación.
 ¿ Cuáles son las variables ?. Transfórmalo en un conjunto `tidy` con las variables, `grade, sex y count`
 ```{r}
+load(file ='./data/datostidyr.Rdata')
+library(tidyr)
 
-
+students_tidy <- students %>%
+  pivot_longer(
+    cols = -grade, 
+    names_to = "sex", 
+    values_to = "count"
+  )
 
 ```
 30. Considera el conjunto ´students2´, que es similar al primero pero que se han recogido datos correspondientes a dos grupos, (`male_1, female_1`, etc). Transfórmalo en un conjunto `tidy` añadiendo una columna adicional correspondiente al grupo (llama a la nueva variable `class`)
 ```{r}
+library(tidyr)
+library(dplyr)
 
-
-
+students2_tidy <- students2 %>%
+  pivot_longer(
+    cols = -grade,
+    names_to = c(".value", "class"),
+    names_pattern = "(.*)_(\\d)"
+  )
 
 ```
 31. Considera el conjunto `students3` y observa por qué no es un `tidy data` . Las variables finales del conjunto deberían ser: `name, class, midterm, final`. Dado que un alumno solo puede estar en una de las clases aparecen muchos `NA`, al reorganizar, usa `na.rm=TRUE` en las opciones de `gather`
