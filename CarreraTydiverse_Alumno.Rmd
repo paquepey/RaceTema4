@@ -118,7 +118,6 @@ mydf %>% dim
 ```
 2. Para facilitar el manejo transforma los datos en un tibble `as_tibble` y almacena el resultado con el nombre `cran`, y borra el data frame original (usa `rm`)
 ```{r}
-# Asumiendo que mydf ya está cargado en tu sesión de R como se indica en la parte anterior
 # Transforma mydf en un tibble y lo almacena en cran
 cran <- as_tibble(mydf)
 
@@ -417,19 +416,28 @@ students2_tidy <- students2 %>%
 ```
 31. Considera el conjunto `students3` y observa por qué no es un `tidy data` . Las variables finales del conjunto deberían ser: `name, class, midterm, final`. Dado que un alumno solo puede estar en una de las clases aparecen muchos `NA`, al reorganizar, usa `na.rm=TRUE` en las opciones de `gather`
 ```{r}
-
-
-
+students3_tidy <- students3 %>%
+  pivot_longer(
+    cols = starts_with("class"),
+    names_to = "class",
+    values_to = "score",
+    names_prefix = "class",
+    values_drop_na = TRUE
+  ) %>%
+  separate(class, into = c("class", "test"), sep = "_") %>%
+  pivot_wider(
+    names_from = test,
+    values_from = score
+  )
 
 ```
 32. Considera que la columna `class` queremos especificarla con valores, 1,2,3,4 y 5 en lugar de class1, ..., class5. En librería de importación de datos (`readr`) se proporcionan funciones que permite identificar y extraer diversos tipos de datos. Son las funciones `parse_XXXX`. Observa el efecto de aplicar `parse_number('class5')` y utiliza el resultado para realizar la tarea solicitada.
 
 ```{r}
+library(readr)
 
-
-
-
-
+students3_tidy <- students3_tidy %>%
+  mutate(class = parse_number(class))
 
 ```
 33. Observa el conjunto `students4` donde se presenta el problema de tener varias observaciones en la misma tabla. Separa el conjunto en dos tablas, una que contenga información relativa a los estudiantes, que llamarás `student_info`, que no debe contener repeticiones, y otra con las calificaciones y la clave primaria que enlaza ambas tablas(`id`), que llamarás `gradebook`.
