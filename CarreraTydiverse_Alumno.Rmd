@@ -137,30 +137,32 @@ glimpse(cran)
 4. Elige únicamente las variables `ip_id, package, country`
 ```{r}
 # Seleccionamos las columnas específicas
-cran <- cran %>% 
+cran %>% 
   select(ip_id, package, country)
 
 ```
 5. Elige todas las variables entre `r_arch y country` 
 ```{r}
-# Seleccionamos columnas entre r_arch y country
-cran <- cran %>%
+cran %>%
   select(r_arch:country)
 
 ```
 5. Puedes usar el signo (-) para no coger una columna determinada. Selecciona todas las columnas menos las que están entre `date y size` 
 ```{r}
-# Seleccionamos todas las columnas excepto las que están entre date y size
-cran <- cran %>%
+cran %>%
   select(-date:size)
 
 ```
 6. Elige aquellos registros en los que se haya descargado el paquete `plotly`, desde un sistema que ejecuta la versión de R 3.5.1
 ```{r}
+cran %>%
+  filter(package == "plotly")
 
 ```
 6. Elige aquellas descargas realizadas desde España (ES), con versiones de R superiores a la 3.4.0
 ```{r}
+cran %>%
+  filter(country == "ES")
 
 ```
 
