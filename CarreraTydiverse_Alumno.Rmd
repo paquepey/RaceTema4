@@ -338,9 +338,11 @@ cran %>%
 ```
 28. Repite el apartado anterior ordenando los resultados, en orden descendente según el tamaño en Megabytes y muéstralo por pantalla.
 ```{r}
-
-
-
+cran %>%
+  mutate(size_mb = size / 2^20) %>%
+  filter(size_mb <= 0.5) %>%
+  arrange(desc(size_mb)) %>%
+  print()
 
 ```
 **EXTRA**. Se desea mostar gráficamente aquellos países que suponen el mayor tráfico de información, ocasionado por el total de descargas acumuladas. Para facilitar la visualización céntrate en aquellos que están por encima del 90 % del top de descargas. El gráfico debe mostrar los valores de forma ordenada de mayor a menor. En el eje X debe aparecer el código de país y en el eje Y el tráfico generado. Intenta hacerlo usando una tubería sin emplear ninguna variable auxiliar.
